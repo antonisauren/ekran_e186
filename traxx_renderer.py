@@ -9,10 +9,15 @@ from sys import maxint
 
 # definicje kolorow
 czarny = (0,0,0)
+czarny_diag = (0,0,0)
 bialy =(255,255,255)
+bialy_diag =(255,255,255)
 jszary =(218,218,218)
 niebieski =(0,0,255)
+niebieski_diag =(0,0,255)
 ed = (157,145,95)
+jasnoniebieski_diag = (133,128,255)
+zolty_diag = (255,254,2)
 
 
 class traxx_renderer(abstractscreenrenderer):
@@ -44,7 +49,7 @@ class traxx_renderer(abstractscreenrenderer):
 		speed = float(state['velocity'])
 		if speed > 180:
 			speed = 180
-# czas
+#czas
 		if state['seconds'] != self.last_time_update:
 			dt = state['seconds'] - self.last_time_update
 			if dt < 0:
@@ -63,9 +68,9 @@ class traxx_renderer(abstractscreenrenderer):
 			sec = "0" +str(state['seconds'])
 		else:
 			sec = str(state['seconds'])
-		draw.text((576,1045), godz +":"+ min +":"+ sec, fill=jszary, font=self.sredni_arial)
 		
-# data
+		
+#data
 		if self.last_hour == 23 and state['hours'] == 0:
 			self.dzis = self.dzis+1 # wlasnie wybila polnoc
 		self.last_hour = state['hours']
@@ -73,31 +78,12 @@ class traxx_renderer(abstractscreenrenderer):
 		dzien = datetime.weekday(data)
 		data = data.strftime("%d,%m,%Y")
 		DayL = ['Pn','Wt','Śr','Cz','Pt','So','Nd']
-		draw.text((1021,60), DayL[dzien] + ", " + data, fill=czarny, font=self.sredni_arial)
+
+#ERTMS------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#ERTMS godzina
+		draw.text((576,1045), godz +":"+ min +":"+ sec, fill=jszary, font=self.sredni_arial)
 		
-#zegarek
-		#obroty wskazówek w radianach
-		sekundy = radians((state['seconds']*6))
-		minuty = radians((state['minutes']*6))
-		godziny = radians((state['hours']*30 + state['minutes']*0.5)) #składowa minutowa dla płynnego ruchu
-		srodek = (1130, 242)
-		#długości wskazówek
-		r_s = 105
-		r_m = 98
-		r_g = 82
-		#punkty końcowe
-		k_s = (srodek[0]+(r_s*sin(sekundy)), srodek[1]-(r_s*cos(sekundy)))
-		k_m = (srodek[0]+(r_m*sin(minuty)), srodek[1]-(r_m*cos(minuty)))
-		k_g = (srodek[0]+(r_g*sin(godziny)), srodek[1]-(r_g*cos(godziny)))
-		p_s = (srodek[0]+(7*(-sin(sekundy))), srodek[1]-(7*(-cos(sekundy))))
-		p_m = (srodek[0]+(7*(-sin(minuty))), srodek[1]-(7*(-cos(minuty))))
-		p_g = (srodek[0]+(7*(-sin(godziny))), srodek[1]-(7*(-cos(godziny))))
-		#rysowanie wskazówek
-		draw.line((p_s[0], p_s[1],k_s[0], k_s[1]),fill=czarny, width=2)
-		draw.line((p_m[0], p_m[1],k_m[0], k_m[1]),fill=czarny, width=4)
-		draw.line((p_g[0], p_g[1],k_g[0], k_g[1]),fill=czarny, width=8)
-		
-#prędkościomierz
+#ERTMS prędkościomierz
 		draw.ellipse([(431, 1249), (521, 1339)], fill=bialy)
 		rotate = speed * 270 / 180 + 45
 		rad =  radians(rotate)
@@ -122,7 +108,7 @@ class traxx_renderer(abstractscreenrenderer):
 		
 		self.print_center(draw, '%d' % speed, 476, 1294, self.sredni_arial, czarny)
 		
-#siła pociągowa/hamowania na ETCS
+#ERTMS siła pociągowa/hamowania
 		
 		#siła pociągowa
 		frt = (state['eimp_c1_frt'])
@@ -154,37 +140,61 @@ class traxx_renderer(abstractscreenrenderer):
 		p3 = (srodek[0]+point[0]*cos(rad)-point[1]*sin(rad),srodek[1]+point[1]*cos(rad)+point[0]*sin(rad))
 		draw.polygon([p1,p2,p3],fill=bialy)
 		
+#Ekran diagnostyczny--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#diag data
+		draw.text((1021,60), DayL[dzien] + ", " + data, fill=czarny_diag, font=self.sredni_arial)
 		
+#diag zegarek
+		#obroty wskazówek w radianach
+		sekundy = radians((state['seconds']*6))
+		minuty = radians((state['minutes']*6))
+		godziny = radians((state['hours']*30 + state['minutes']*0.5)) #składowa minutowa dla płynnego ruchu
+		srodek = (1130, 242)
+		#długości wskazówek
+		r_s = 105
+		r_m = 98
+		r_g = 82
+		#punkty końcowe
+		k_s = (srodek[0]+(r_s*sin(sekundy)), srodek[1]-(r_s*cos(sekundy)))
+		k_m = (srodek[0]+(r_m*sin(minuty)), srodek[1]-(r_m*cos(minuty)))
+		k_g = (srodek[0]+(r_g*sin(godziny)), srodek[1]-(r_g*cos(godziny)))
+		p_s = (srodek[0]+(7*(-sin(sekundy))), srodek[1]-(7*(-cos(sekundy))))
+		p_m = (srodek[0]+(7*(-sin(minuty))), srodek[1]-(7*(-cos(minuty))))
+		p_g = (srodek[0]+(7*(-sin(godziny))), srodek[1]-(7*(-cos(godziny))))
+		#rysowanie wskazówek
+		draw.line((p_s[0], p_s[1],k_s[0], k_s[1]),fill=czarny_diag, width=2)
+		draw.line((p_m[0], p_m[1],k_m[0], k_m[1]),fill=czarny_diag, width=4)
+		draw.line((p_g[0], p_g[1],k_g[0], k_g[1]),fill=czarny_diag, width=8)
 		
-#slupki
+#diag slupki 1
 		
 		#wolto
 		wolt = state['eimp_c1_uhv']
 		if wolt>5000:
 			wolt=5000
 		napiecie = 586-(0.0866*wolt)
-		draw.rectangle(((266,586),(358,napiecie)), fill=niebieski)
+		draw.rectangle(((266,586),(358,napiecie)), fill=niebieski_diag)
 		if wolt>2500:
-			draw.rectangle(((267,608),(358,646)), fill=niebieski)
+			draw.rectangle(((267,608),(358,646)), fill=niebieski_diag)
 		if state['eimp_c1_ms']:
-			draw.text((271,613), u'WG wł', font=self.maly_arial, fill=bialy)
+			draw.text((271,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
 		elif wolt>2500:
-			draw.text((265,613), u'WG wył', font=self.maly_arial, fill=bialy)
+			draw.text((265,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
 		else:
-			draw.text((265,613), u'WG wył', font=self.maly_arial, fill=czarny)
+			draw.text((265,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
 			
 		#ampery
 		prad = state['eimp_c1_ihv']
 		if prad<0:
 			prad=0
 		ampery = 586-(0.1183*prad)
-		draw.rectangle(((532,586),(625,ampery)), fill=niebieski)
+		draw.rectangle(((532,586),(625,ampery)), fill=niebieski_diag)
 		
-		self.print_fixed_with(draw, '%d' % prad, (535,607), 4, self.sredni_arial, czarny)
+		self.print_fixed_with(draw, '%d' % prad, (535,607), 4, self.sredni_arial, czarny_diag)
 		
 		#hbl
 		hbl = state['eimp_pn1_bp']
 		cisn = 586-(34.6666*hbl) 
-		draw.rectangle(((727,647),(820,cisn)), fill=niebieski)		
+		draw.rectangle(((727,647),(820,cisn)), fill=niebieski_diag)		
 		
 		return obrazek
