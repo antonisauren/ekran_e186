@@ -27,6 +27,7 @@ class traxx_renderer(abstractscreenrenderer):
 		
 		self.sredni_arial = ImageFont.truetype(lookup_path + "arialbd.ttf", 34)
 		self.maly_arial = ImageFont.truetype(lookup_path + "arialbd.ttf", 26)
+		self.bmaly_arial = ImageFont.truetype(lookup_path + "arialbd.ttf", 16)
 		
 		self.kilometry = (random()*300000)+5000
 		self.last_time_update = 0
@@ -165,6 +166,32 @@ class traxx_renderer(abstractscreenrenderer):
 		draw.line((p_s[0], p_s[1],k_s[0], k_s[1]),fill=czarny_diag, width=2)
 		draw.line((p_m[0], p_m[1],k_m[0], k_m[1]),fill=czarny_diag, width=4)
 		draw.line((p_g[0], p_g[1],k_g[0], k_g[1]),fill=czarny_diag, width=8)
+		
+#diag status3
+		#Hamulec bezpośredni nie jestł luzowany
+		#Blokada trakcji (wywaliło szybki)
+		#Blokada trakcji przy zmianie pantografu
+		#Trwa przegrupowanie przetwornicy pokładowej
+		#Zmiana sterowania hamowaniem wyrównać przewód główny
+		#Zluzować sprężynowy hamulec postojowy
+		#Odblokować urządzenie czuwakowe
+		#Zakłócenie systemów sterowania
+		if (state['eimp_c1_ms'] == 0 and state['eimp_c1_uhv'] > 2500):
+			draw.rectangle(((558,720),(969,784)), fill=jasnoniebieski_diag)
+			self.print_center(draw, u'Włączyć wyłącznik szybki', 763, 752, self.sredni_arial, bialy)
+		#Blokada wyłącznika szybkiego
+		#Przegrupowanie napędu
+		if (state['eimp_c1_ms'] == 0 and state['main_ctrl_actual_pos'] !=0): #dodać 'main_ctrl_actual_pos' do pythona i blokadę do fizyki, bo teraz da się załączyć
+			draw.rectangle(((558,720),(969,784)), fill=jasnoniebieski_diag)
+			self.print_center(draw, u'Nastawnik jazdy w pozycji „0” w celu włączenia wyłącznika szybkiego', 763, 752, self.bmaly_arial, bialy)
+		#Kabina maszynisty bez obsady
+		#Zbyt niskie ciśnienie powietrza wyłącznika głównego
+		if ((state['direction'] != 0) and ((state['eimp_u1_pf'] == 0) and (state['eimp_u1_pr'] == 0))):
+			draw.rectangle(((558,720),(969,784)), fill=jasnoniebieski_diag)
+			self.print_center(draw, u'Podnieść pantograf', 763, 752, self.sredni_arial, bialy)
+		
+		#Odblokować pantografy
+		#Zakłócenie systemów sterowania
 		
 #diag slupki 1
 		
