@@ -26,6 +26,8 @@ class traxx_renderer(abstractscreenrenderer):
 		self.ertms = Image.open(lookup_path + "ertms.png")
 		self.diag_1_day = Image.open(lookup_path + "diag_1_day.png")
 		self.maska  = Image.open(lookup_path + "maska.png")
+		self.shp  = Image.open(lookup_path + "shp.png")
+		self.pedal  = Image.open(lookup_path + "pedal.png")
 		
 		self.sredni_arial = ImageFont.truetype(lookup_path + "arialbd.ttf", 34)
 		self.maly_arial = ImageFont.truetype(lookup_path + "arialbd.ttf", 26)
@@ -147,12 +149,21 @@ class traxx_renderer(abstractscreenrenderer):
 			point = (13,-249)
 			p3 = (srodek[0]+point[0]*cos(rad)-point[1]*sin(rad),srodek[1]+point[1]*cos(rad)+point[0]*sin(rad))
 			draw.polygon([p1,p2,p3],fill=bialy)
+	#ERTMS Ikonki
+			if (state['shp']):
+				obrazek.paste(self.shp,(303,1551),self.shp)
+			if (state['ca']):
+				obrazek.paste(self.pedal,(1155,1551),self.pedal)
 			
-	#Ekran diagnostyczny--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#Ekran diagnostyczny--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 			obrazek.paste(self.diag_1_day,(130,54),self.diag_1_day)
 	#diag data
 			draw.text((1021,60), DayL[dzien] + ", " + data, fill=czarny_diag, font=self.sredni_arial)
-			
+	#diag nr pociągu
+			trainnumber = state['trainnumber']
+			if ((state['trainnumber'] == 'none') or (state['trainnumber'] == 'rozklad') ):
+				trainnumber = ' '
+			draw.text((1112,387), trainnumber, fill=czarny_diag, font=self.maly_arial)
 	#diag zegarek
 			#obroty wskazówek w radianach
 			sekundy = radians((state['seconds']*6))
@@ -175,13 +186,23 @@ class traxx_renderer(abstractscreenrenderer):
 			draw.line((p_m[0], p_m[1],k_m[0], k_m[1]),fill=czarny_diag, width=4)
 			draw.line((p_g[0], p_g[1],k_g[0], k_g[1]),fill=czarny_diag, width=8)
 			
+#test
+			# draw.text((558,600), state['pantpress'], font=self.maly_arial, fill=bialy_diag)
+			
+			# if state['ca'] == 1:
+				# draw.rectangle(((558,520),(969,584)), fill=jasnoniebieski_diag)
+			# if state['shp'] == 1:
+				# draw.rectangle(((558,420),(969,484)), fill=jasnoniebieski_diag)
+			
 	#diag status3
 			#Hamulec bezpośredni nie jestł luzowany
 			#Blokada trakcji (wywaliło szybki)
 			#Blokada trakcji przy zmianie pantografu
 			#Trwa przegrupowanie przetwornicy pokładowej
 			#Zmiana sterowania hamowaniem wyrównać przewód główny
-			#Zluzować sprężynowy hamulec postojowy
+			if ((state['manual_brake'] == 1) and (state['direction'] != 0)):
+				draw.rectangle(((558,720),(969,784)), fill=jasnoniebieski_diag)
+				self.print_center(draw, u'Zluzować sprężynowy hamulec postojowy', 763, 752, self.bmaly_arial, bialy)
 			#Odblokować urządzenie czuwakowe
 			#Zakłócenie systemów sterowania
 			if (state['eimp_c1_ms'] == 0 and state['eimp_c1_uhv'] > 2500):
@@ -189,7 +210,7 @@ class traxx_renderer(abstractscreenrenderer):
 				self.print_center(draw, u'Włączyć wyłącznik szybki', 763, 752, self.sredni_arial, bialy)
 			#Blokada wyłącznika szybkiego
 			#Przegrupowanie napędu
-			if (state['eimp_c1_ms'] == 0 and state['main_ctrl_actual_pos'] !=0): #dodać 'main_ctrl_actual_pos' do pythona i blokadę do fizyki, bo teraz da się załączyć
+			if (state['eimp_c1_ms'] == 0 and state['main_ctrl_actual_pos'] !=0): #dodać 'main_ctrl_desired_pos' do pythona i blokadę do fizyki, bo teraz da się załączyć
 				draw.rectangle(((558,720),(969,784)), fill=jasnoniebieski_diag)
 				self.print_center(draw, u'Nastawnik jazdy w pozycji „0” w celu włączenia wyłącznika szybkiego', 763, 752, self.bmaly_arial, bialy)
 			#Kabina maszynisty bez obsady
