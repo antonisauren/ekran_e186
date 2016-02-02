@@ -25,6 +25,9 @@ class traxx_renderer(abstractscreenrenderer):
 		self.podklad = Image.open(lookup_path + "ek1.tga")
 		self.ertms = Image.open(lookup_path + "ertms.png")
 		self.diag_1_day = Image.open(lookup_path + "diag_1_day.png")
+		self.diag_2_day = Image.open(lookup_path + "diag_2_day.png")
+		self.diag_3_day = Image.open(lookup_path + "diag_3_day.png")
+		self.diag_4_day = Image.open(lookup_path + "diag_4_day.png")
 		self.maska  = Image.open(lookup_path + "maska.png")
 		self.shp  = Image.open(lookup_path + "shp.png")
 		self.pedal  = Image.open(lookup_path + "pedal.png")
@@ -45,6 +48,17 @@ class traxx_renderer(abstractscreenrenderer):
 		draw.text(((X-w[0]/2),(Y-w[1]/2)), text, font=font, fill=color)
 		
 	def _render(self, state):
+#liczenie pojazdów
+		if (state['unit_no'] == 1):
+			pojazdy = 1
+		if (state['unit_no'] == 2):
+			pojazdy = 2
+		if (state['unit_no'] == 3):
+			pojazdy = 3
+		if (state['unit_no'] == 4):
+			pojazdy = 4
+		if (state['unit_no'] > 4):
+			pojazdy = 4
 		# kopia obrazka na potrzeby tego jednego renderowania
 		obrazek = self.podklad.copy()
 		# chcemy rysowac po teksturze pulpitu
@@ -156,7 +170,14 @@ class traxx_renderer(abstractscreenrenderer):
 				obrazek.paste(self.pedal,(1155,1551),self.pedal)
 			
 #Ekran diagnostyczny--------------------------------------------------------------------------------------------------------------------------------------------------------------------
-			obrazek.paste(self.diag_1_day,(130,54),self.diag_1_day)
+			if (pojazdy ==1):
+				obrazek.paste(self.diag_1_day,(130,54),self.diag_1_day)
+			if (pojazdy ==2):
+				obrazek.paste(self.diag_2_day,(130,54),self.diag_2_day)
+			if (pojazdy ==3):
+				obrazek.paste(self.diag_3_day,(130,54),self.diag_3_day)
+			if (pojazdy ==4):
+				obrazek.paste(self.diag_4_day,(130,54),self.diag_4_day)
 	#diag data
 			draw.text((1021,60), DayL[dzien] + ", " + data, fill=czarny_diag, font=self.sredni_arial)
 	#diag nr pociągu
@@ -223,34 +244,198 @@ class traxx_renderer(abstractscreenrenderer):
 			#Zakłócenie systemów sterowania
 			
 	#diag slupki 1
-			
-			#wolto
-			wolt = state['eimp_c1_uhv']
-			if wolt>5000:
-				wolt=5000
-			napiecie = 586-(0.0866*wolt)
-			draw.rectangle(((266,586),(358,napiecie)), fill=niebieski_diag)
-			if wolt>2500:
-				draw.rectangle(((267,608),(358,646)), fill=niebieski_diag)
-			if state['eimp_c1_ms']:
-				draw.text((271,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
-			elif wolt>2500:
-				draw.text((265,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
-			else:
-				draw.text((265,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
+			if (pojazdy ==1):
+				#wolto
+				wolt = state['eimp_c1_uhv']
+				if wolt>5000:
+					wolt=5000
+				napiecie = 586-(0.0866*wolt)
+				draw.rectangle(((266,586),(358,napiecie)), fill=niebieski_diag)
+				if wolt>2500:
+					draw.rectangle(((267,608),(358,646)), fill=niebieski_diag)
+				if state['eimp_c1_ms']:
+					draw.text((271,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
+				elif wolt>2500:
+					draw.text((265,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
+				else:
+					draw.text((265,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
+					
+				#ampery
+				prad = state['eimp_c1_ihv']
+				if prad<0:
+					prad=0
+				self.print_fixed_with(draw, '%d' % prad, (535,607), 4, self.sredni_arial, czarny_diag)
+				if prad>3700:
+					prad=3700
+				ampery = 586-(0.1183*prad)
+				draw.rectangle(((532,586),(625,ampery)), fill=niebieski_diag)
 				
-			#ampery
-			prad = state['eimp_c1_ihv']
-			if prad<0:
-				prad=0
-			ampery = 586-(0.1183*prad)
-			draw.rectangle(((532,586),(625,ampery)), fill=niebieski_diag)
-			
-			self.print_fixed_with(draw, '%d' % prad, (535,607), 4, self.sredni_arial, czarny_diag)
-			
-			#hbl
-			hbl = state['eimp_pn1_bp']
-			cisn = 586-(34.6666*hbl) 
-			draw.rectangle(((727,647),(820,cisn)), fill=niebieski_diag)		
+				
+				#hbl
+				hbl = state['eimp_pn1_bp']
+				cisn = 586-(34.6666*hbl) 
+				draw.rectangle(((727,647),(820,cisn)), fill=niebieski_diag)
+	#diag slupki 2
+			if (pojazdy == 2):
+				#wolto1
+				wolt = state['eimp_c1_uhv']
+				if wolt>5000:
+					wolt=5000
+				napiecie = 586-(0.0866*wolt)
+				draw.rectangle(((266,586),(358,napiecie)), fill=niebieski_diag)
+				if wolt>2500:
+					draw.rectangle(((267,608),(358,646)), fill=niebieski_diag)
+				if state['eimp_c1_ms']:
+					draw.text((271,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
+				elif wolt>2500:
+					draw.text((265,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
+				else:
+					draw.text((265,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
+				#wolto2
+				wolt = state['eimp_c2_uhv']
+				if wolt>5000:
+					wolt=5000
+				napiecie = 586-(0.0866*wolt)
+				draw.rectangle(((449,586),(541,napiecie)), fill=niebieski_diag)
+				if wolt>2500:
+					draw.rectangle(((450,608),(541,646)), fill=niebieski_diag)
+				if state['eimp_c2_ms']:
+					draw.text((454,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
+				elif wolt>2500:
+					draw.text((448,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
+				else:
+					draw.text((448,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
+					
+				#ampery
+				prad = state['eimp_t_itothv']
+				if prad<0:
+					prad=0
+				self.print_fixed_with(draw, '%d' % prad, (728,607), 4, self.sredni_arial, czarny_diag)
+				if prad>3700:
+					prad=3700
+				ampery = 586-(0.1183*prad)
+				draw.rectangle(((725,586),(818,ampery)), fill=niebieski_diag)
+				
+	#diag slupki 3
+			if (pojazdy == 3):
+				#wolto1
+				wolt = state['eimp_c1_uhv']
+				if wolt>5000:
+					wolt=5000
+				napiecie = 586-(0.0866*wolt)
+				draw.rectangle(((266,586),(358,napiecie)), fill=niebieski_diag)
+				if wolt>2500:
+					draw.rectangle(((267,608),(358,646)), fill=niebieski_diag)
+				if state['eimp_c1_ms']:
+					draw.text((271,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
+				elif wolt>2500:
+					draw.text((265,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
+				else:
+					draw.text((265,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
+				#wolto2
+				wolt = state['eimp_c2_uhv']
+				if wolt>5000:
+					wolt=5000
+				napiecie = 586-(0.0866*wolt)
+				draw.rectangle(((373,586),(465,napiecie)), fill=niebieski_diag)
+				if wolt>2500:
+					draw.rectangle(((374,608),(465,646)), fill=niebieski_diag)
+				if state['eimp_c2_ms']:
+					draw.text((378,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
+				elif wolt>2500:
+					draw.text((372,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
+				else:
+					draw.text((372,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
+				#wolto3
+				wolt = state['eimp_c3_uhv']
+				if wolt>5000:
+					wolt=5000
+				napiecie = 586-(0.0866*wolt)
+				draw.rectangle(((480,586),(572,napiecie)), fill=niebieski_diag)
+				if wolt>2500:
+					draw.rectangle(((481,608),(572,646)), fill=niebieski_diag)
+				if state['eimp_c3_ms']:
+					draw.text((485,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
+				elif wolt>2500:
+					draw.text((479,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
+				else:
+					draw.text((479,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
+				#ampery
+				prad = state['eimp_t_itothv']
+				if prad<0:
+					prad=0
+				self.print_fixed_with(draw, '%d' % prad, (728,607), 4, self.sredni_arial, czarny_diag)
+				if prad>3700:
+					prad=3700
+				ampery = 586-(0.1183*prad)
+				draw.rectangle(((725,586),(818,ampery)), fill=niebieski_diag)
+
+	#diag slupki 4
+			if (pojazdy == 4):
+				#wolto1
+				wolt = state['eimp_c1_uhv']
+				if wolt>5000:
+					wolt=5000
+				napiecie = 586-(0.0866*wolt)
+				draw.rectangle(((229,586),(302,napiecie)), fill=niebieski_diag)
+				if wolt>2500:
+					draw.rectangle(((229,608),(302,646)), fill=niebieski_diag)
+				if state['eimp_c1_ms']:
+					draw.text((241,618), u'WG wł', font=self.bmaly_arial, fill=bialy_diag)
+				elif wolt>2500:
+					draw.text((235,618), u'WG wył', font=self.bmaly_arial, fill=bialy_diag)
+				else:
+					draw.text((235,618), u'WG wył', font=self.bmaly_arial, fill=czarny_diag)
+				#wolto2
+				wolt = state['eimp_c2_uhv']
+				if wolt>5000:
+					wolt=5000
+				napiecie = 586-(0.0866*wolt)
+				draw.rectangle(((392,586),(465,napiecie)), fill=niebieski_diag)
+				if wolt>2500:
+					draw.rectangle(((392,608),(465,646)), fill=niebieski_diag)
+				if state['eimp_c2_ms']:
+					draw.text((404,618), u'WG wł', font=self.bmaly_arial, fill=bialy_diag)
+				elif wolt>2500:
+					draw.text((398,618), u'WG wył', font=self.bmaly_arial, fill=bialy_diag)
+				else:
+					draw.text((398,618), u'WG wył', font=self.bmaly_arial, fill=czarny_diag)
+				#wolto3
+				wolt = state['eimp_c3_uhv']
+				if wolt>5000:
+					wolt=5000
+				napiecie = 586-(0.0866*wolt)
+				draw.rectangle(((555,586),(628,napiecie)), fill=niebieski_diag)
+				if wolt>2500:
+					draw.rectangle(((555,608),(628,646)), fill=niebieski_diag)
+				if state['eimp_c3_ms']:
+					draw.text((567,618), u'WG wł', font=self.bmaly_arial, fill=bialy_diag)
+				elif wolt>2500:
+					draw.text((561,618), u'WG wył', font=self.bmaly_arial, fill=bialy_diag)
+				else:
+					draw.text((561,618), u'WG wył', font=self.bmaly_arial, fill=czarny_diag)
+				#wolto4
+				wolt = state['eimp_c4_uhv']
+				if wolt>5000:
+					wolt=5000
+				napiecie = 586-(0.0866*wolt)
+				draw.rectangle(((717,586),(790,napiecie)), fill=niebieski_diag)
+				if wolt>2500:
+					draw.rectangle(((717,608),(790,646)), fill=niebieski_diag)
+				if state['eimp_c4_ms']:
+					draw.text((729,618), u'WG wł', font=self.bmaly_arial, fill=bialy_diag)
+				elif wolt>2500:
+					draw.text((723,618), u'WG wył', font=self.bmaly_arial, fill=bialy_diag)
+				else:
+					draw.text((723,618), u'WG wył', font=self.bmaly_arial, fill=czarny_diag)
+				#ampery
+				prad = state['eimp_t_itothv']
+				if prad<0:
+					prad=0
+				self.print_fixed_with(draw, '%d' % prad, (886,607), 4, self.sredni_arial, czarny_diag)
+				if prad>3700:
+					prad=3700
+				ampery = 586-(0.1183*prad)
+				draw.rectangle(((882,586),(959,ampery)), fill=niebieski_diag)
 		
 		return obrazek
