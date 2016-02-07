@@ -264,7 +264,7 @@ class traxx_renderer(abstractscreenrenderer):
 				prad = state['eimp_c1_ihv']
 				if prad<0:
 					prad=0
-				self.print_fixed_with(draw, '%d' % prad, (535,607), 4, self.sredni_arial, czarny_diag)
+				self.print_fixed_with(draw, '2000', (535,607), 4, self.sredni_arial, czarny_diag)
 				if prad>3700:
 					prad=3700
 				ampery = 586-(0.1183*prad)
@@ -310,7 +310,7 @@ class traxx_renderer(abstractscreenrenderer):
 				prad = state['eimp_t_itothv']
 				if prad<0:
 					prad=0
-				self.print_fixed_with(draw, '%d' % prad, (728,607), 4, self.sredni_arial, czarny_diag)
+				self.print_fixed_with(draw, '2000', (728,607), 4, self.sredni_arial, czarny_diag)
 				if prad>3700:
 					prad=3700
 				ampery = 586-(0.1183*prad)
@@ -364,7 +364,7 @@ class traxx_renderer(abstractscreenrenderer):
 				prad = state['eimp_t_itothv']
 				if prad<0:
 					prad=0
-				self.print_fixed_with(draw, '%d' % prad, (728,607), 4, self.sredni_arial, czarny_diag)
+				self.print_fixed_with(draw, '2000', (728,607), 4, self.sredni_arial, czarny_diag)
 				if prad>3700:
 					prad=3700
 				ampery = 586-(0.1183*prad)
@@ -432,7 +432,7 @@ class traxx_renderer(abstractscreenrenderer):
 				prad = state['eimp_t_itothv']
 				if prad<0:
 					prad=0
-				self.print_fixed_with(draw, '%d' % prad, (886,607), 4, self.sredni_arial, czarny_diag)
+				self.print_fixed_with(draw, '2000', (886,607), 4, self.sredni_arial, czarny_diag)
 				if prad>3700:
 					prad=3700
 				ampery = 586-(0.1183*prad)
