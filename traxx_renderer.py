@@ -31,6 +31,9 @@ class traxx_renderer(abstractscreenrenderer):
 		self.maska  = Image.open(lookup_path + "maska.png")
 		self.shp  = Image.open(lookup_path + "shp.png")
 		self.pedal  = Image.open(lookup_path + "pedal.png")
+		self.ws  = Image.open(lookup_path + "ws.png")
+		self.szyna_zbiorcza  = Image.open(lookup_path + "szyna_zbiorcza.png")
+		self.drzwi  = Image.open(lookup_path + "drzwi.png")
 		
 		self.sredni_arial = ImageFont.truetype(lookup_path + "arialbd.ttf", 34)
 		self.maly_arial = ImageFont.truetype(lookup_path + "arialbd.ttf", 26)
@@ -168,6 +171,12 @@ class traxx_renderer(abstractscreenrenderer):
 				obrazek.paste(self.shp,(303,1551),self.shp)
 			if (state['ca']):
 				obrazek.paste(self.pedal,(1155,1551),self.pedal)
+			if (state['eimp_c1_heat']==0):
+				obrazek.paste(self.szyna_zbiorcza,(729,1551),self.szyna_zbiorcza)
+			if (state['eimp_c1_ms']==0):
+				obrazek.paste(self.ws,(801,1551),self.ws)
+			if (state['doors_2']==0 and state['doors_no_2']>0):
+				obrazek.paste(self.drzwi,(942,1551),self.drzwi)
 			
 #Ekran diagnostyczny--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 			if (pojazdy ==1):
