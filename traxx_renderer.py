@@ -28,6 +28,7 @@ class traxx_renderer(abstractscreenrenderer):
 		self.diag_2_day = Image.open(lookup_path + "diag_2_day.png")
 		self.diag_3_day = Image.open(lookup_path + "diag_3_day.png")
 		self.diag_4_day = Image.open(lookup_path + "diag_4_day.png")
+		self.diag_1_night = Image.open(lookup_path + "diag_1_night.png")
 		self.maska  = Image.open(lookup_path + "maska.png")
 		self.shp  = Image.open(lookup_path + "shp.png")
 		self.pedal  = Image.open(lookup_path + "pedal.png")
@@ -62,6 +63,19 @@ class traxx_renderer(abstractscreenrenderer):
 			pojazdy = 4
 		if (state['unit_no'] > 4):
 			pojazdy = 4
+			
+#zmiana kolorów na nocne
+		global czarny_diag
+		global niebieski_diag
+		if (state['universal3']==1):
+			czarny_diag = (255,255,255)
+			# bialy_diag =(255,255,255)
+			niebieski_diag =(0,0,132)
+			# jasnoniebieski_diag = (133,128,255)
+			# zolty_diag = (255,254,2)
+		else:
+			czarny_diag = (0,0,0)
+			niebieski_diag =(0,0,255)
 		# kopia obrazka na potrzeby tego jednego renderowania
 		obrazek = self.podklad.copy()
 		# chcemy rysowac po teksturze pulpitu
@@ -100,8 +114,9 @@ class traxx_renderer(abstractscreenrenderer):
 		dzien = datetime.weekday(data)
 		data = data.strftime("%d,%m,%Y")
 		DayL = ['Pn','Wt',u'Śr','Cz','Pt','So','Nd']
+
+#ERTMS------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		if state['eimp_c1_batt']==1:
-	#ERTMS------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 			obrazek.paste(self.ertms,(134,1038),self.ertms)
 	#ERTMS godzina
 			draw.text((576,1045), godz +":"+ min +":"+ sec, fill=jszary, font=self.sredni_arial)
@@ -180,7 +195,10 @@ class traxx_renderer(abstractscreenrenderer):
 			
 #Ekran diagnostyczny--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 			if (pojazdy ==1):
-				obrazek.paste(self.diag_1_day,(130,54),self.diag_1_day)
+				if (state['universal3']==0):
+					obrazek.paste(self.diag_1_day,(130,54),self.diag_1_day)
+				if (state['universal3']==1):
+					obrazek.paste(self.diag_1_night,(130,54),self.diag_1_night)
 			if (pojazdy ==2):
 				obrazek.paste(self.diag_2_day,(130,54),self.diag_2_day)
 			if (pojazdy ==3):
@@ -216,16 +234,9 @@ class traxx_renderer(abstractscreenrenderer):
 			draw.line((p_m[0], p_m[1],k_m[0], k_m[1]),fill=czarny_diag, width=4)
 			draw.line((p_g[0], p_g[1],k_g[0], k_g[1]),fill=czarny_diag, width=8)
 			
-#test
-			# draw.text((558,600), state['pantpress'], font=self.maly_arial, fill=bialy_diag)
-			
-			# if state['ca'] == 1:
-				# draw.rectangle(((558,520),(969,584)), fill=jasnoniebieski_diag)
-			# if state['shp'] == 1:
-				# draw.rectangle(((558,420),(969,484)), fill=jasnoniebieski_diag)
 			
 	#diag status3
-			#Hamulec bezpośredni nie jestł luzowany
+			#Hamulec bezpośredni nie jest luzowany
 			#Blokada trakcji (wywaliło szybki)
 			#Blokada trakcji przy zmianie pantografu
 			#Trwa przegrupowanie przetwornicy pokładowej
