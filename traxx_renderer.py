@@ -29,6 +29,7 @@ class traxx_renderer(abstractscreenrenderer):
 		self.diag_3_day = Image.open(lookup_path + "diag_3_day.png")
 		self.diag_4_day = Image.open(lookup_path + "diag_4_day.png")
 		self.diag_1_night = Image.open(lookup_path + "diag_1_night.png")
+		self.diag_2_night = Image.open(lookup_path + "diag_2_night.png")
 		self.maska  = Image.open(lookup_path + "maska.png")
 		self.shp  = Image.open(lookup_path + "shp.png")
 		self.pedal  = Image.open(lookup_path + "pedal.png")
@@ -200,7 +201,10 @@ class traxx_renderer(abstractscreenrenderer):
 				if (state['universal3']==1):
 					obrazek.paste(self.diag_1_night,(130,54),self.diag_1_night)
 			if (pojazdy ==2):
-				obrazek.paste(self.diag_2_day,(130,54),self.diag_2_day)
+				if (state['universal3']==0):
+					obrazek.paste(self.diag_2_day,(130,54),self.diag_2_day)
+				if (state['universal3']==1):
+					obrazek.paste(self.diag_2_night,(130,54),self.diag_2_night)
 			if (pojazdy ==3):
 				obrazek.paste(self.diag_3_day,(130,54),self.diag_3_day)
 			if (pojazdy ==4):
