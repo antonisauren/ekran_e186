@@ -30,6 +30,8 @@ class traxx_renderer(abstractscreenrenderer):
 		self.diag_4_day = Image.open(lookup_path + "diag_4_day.png")
 		self.diag_1_night = Image.open(lookup_path + "diag_1_night.png")
 		self.diag_2_night = Image.open(lookup_path + "diag_2_night.png")
+		self.diag_3_night = Image.open(lookup_path + "diag_3_night.png")
+		self.diag_4_night = Image.open(lookup_path + "diag_4_night.png")
 		self.maska  = Image.open(lookup_path + "maska.png")
 		self.shp  = Image.open(lookup_path + "shp.png")
 		self.pedal  = Image.open(lookup_path + "pedal.png")
@@ -193,6 +195,8 @@ class traxx_renderer(abstractscreenrenderer):
 				obrazek.paste(self.ws,(801,1551),self.ws)
 			if (state['doors_2']==0 and state['doors_no_2']>0):
 				obrazek.paste(self.drzwi,(942,1551),self.drzwi)
+			# draw.text((942,1651), "door_2=" + str(state['doors_2']), fill=czarny_diag, font=self.maly_arial)
+			# draw.text((942,1751), "doors_no_2=" + str(state['doors_no_2']), fill=czarny_diag, font=self.maly_arial)
 			
 #Ekran diagnostyczny--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 			if (pojazdy ==1):
@@ -206,9 +210,15 @@ class traxx_renderer(abstractscreenrenderer):
 				if (state['universal3']==1):
 					obrazek.paste(self.diag_2_night,(130,54),self.diag_2_night)
 			if (pojazdy ==3):
-				obrazek.paste(self.diag_3_day,(130,54),self.diag_3_day)
+				if (state['universal3']==0):
+					obrazek.paste(self.diag_3_day,(130,54),self.diag_3_day)
+				if (state['universal3']==1):
+					obrazek.paste(self.diag_3_night,(130,54),self.diag_3_night)
 			if (pojazdy ==4):
-				obrazek.paste(self.diag_4_day,(130,54),self.diag_4_day)
+				if (state['universal3']==0):
+					obrazek.paste(self.diag_4_day,(130,54),self.diag_4_day)
+				if (state['universal3']==1):
+					obrazek.paste(self.diag_4_night,(130,54),self.diag_4_night)
 	#diag data
 			draw.text((1021,60), DayL[dzien] + ", " + data, fill=czarny_diag, font=self.sredni_arial)
 	#diag nr pociągu
@@ -347,7 +357,7 @@ class traxx_renderer(abstractscreenrenderer):
 				if wolt>5000:
 					wolt=5000
 				napiecie = 586-(0.0866*wolt)
-				draw.rectangle(((266,586),(358,napiecie)), fill=niebieski_diag)
+				draw.rectangle(((267,586),(358,napiecie)), fill=niebieski_diag)
 				if wolt>2500:
 					draw.rectangle(((267,608),(358,646)), fill=niebieski_diag)
 				if state['eimp_c1_ms']:
@@ -361,38 +371,38 @@ class traxx_renderer(abstractscreenrenderer):
 				if wolt>5000:
 					wolt=5000
 				napiecie = 586-(0.0866*wolt)
-				draw.rectangle(((373,586),(465,napiecie)), fill=niebieski_diag)
+				draw.rectangle(((448,586),(541,napiecie)), fill=niebieski_diag)
 				if wolt>2500:
-					draw.rectangle(((374,608),(465,646)), fill=niebieski_diag)
+					draw.rectangle(((448,608),(541,646)), fill=niebieski_diag)
 				if state['eimp_c2_ms']:
-					draw.text((378,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
+					draw.text((452,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
 				elif wolt>2500:
-					draw.text((372,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
+					draw.text((446,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
 				else:
-					draw.text((372,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
+					draw.text((446,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
 				#wolto3
 				wolt = state['eimp_c3_uhv']
 				if wolt>5000:
 					wolt=5000
 				napiecie = 586-(0.0866*wolt)
-				draw.rectangle(((480,586),(572,napiecie)), fill=niebieski_diag)
+				draw.rectangle(((630,586),(722,napiecie)), fill=niebieski_diag)
 				if wolt>2500:
-					draw.rectangle(((481,608),(572,646)), fill=niebieski_diag)
+					draw.rectangle(((630,608),(722,646)), fill=niebieski_diag)
 				if state['eimp_c3_ms']:
-					draw.text((485,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
+					draw.text((634,613), u'WG wł', font=self.maly_arial, fill=bialy_diag)
 				elif wolt>2500:
-					draw.text((479,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
+					draw.text((628,613), u'WG wył', font=self.maly_arial, fill=bialy_diag)
 				else:
-					draw.text((479,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
+					draw.text((628,613), u'WG wył', font=self.maly_arial, fill=czarny_diag)
 				#ampery
 				prad = state['eimp_t_itothv']
 				if prad<0:
 					prad=0
-				self.print_fixed_with(draw, '2000', (728,607), 4, self.sredni_arial, czarny_diag)
+				self.print_fixed_with(draw, '2000', (836,607), 4, self.sredni_arial, czarny_diag)
 				if prad>3700:
 					prad=3700
 				ampery = 586-(0.1183*prad)
-				draw.rectangle(((725,586),(818,ampery)), fill=niebieski_diag)
+				draw.rectangle(((833,586),(925,ampery)), fill=niebieski_diag)
 
 	#diag slupki 4
 			if (pojazdy == 4):
