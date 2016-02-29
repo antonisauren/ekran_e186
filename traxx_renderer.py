@@ -167,13 +167,19 @@ class traxx_renderer(abstractscreenrenderer):
 			obrazek.paste(self.maska,(730,1041),self.maska)
 			
 			#siła zadana
-			fd = state['eimp_t_fd']
-			if (fd<0):
-				fd=fd*2
-			rotate = fd * 70 / 140
-			if (rotate>140 and fd>0):
+			# fd = state['eimp_t_fd']
+			# if (fd<0):
+				# fd=fd*2
+			# rotate = fd * 70 / 140
+			# if (rotate>140 and fd>0):
+				# rotate=140
+			# if (rotate<-140 and fd<0):
+				# rotate=-140
+			pd = state['eimp_t_pd']
+			rotate = pd * 150
+			if (rotate>140 and pd>0):
 				rotate=140
-			if (rotate<-140 and fd<0):
+			if (rotate<-140 and pd<0):
 				rotate=-140
 			rad =  radians(rotate)
 			srodek = (995, 1295)
